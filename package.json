@@ -1,7 +1,7 @@
 {
-  "name": "hexo-generator-tag",
+  "name": "hexo-generator-topic",
   "version": "0.2.0",
-  "description": "Tag generator for Hexo.",
+  "description": "NOT FOR PRODUCTION! Topic generator for Hexo.",
   "main": "index",
   "scripts": {
     "eslint": "eslint .",
@@ -12,14 +12,14 @@
   "directories": {
     "lib": "./lib"
   },
-  "repository": "hexojs/hexo-generator-tag",
-  "homepage": "http://hexo.io/",
+  "repository": "aerohub/hexo-generator-topic",
+  "homepage": "https://github.com/aerohub/hexo-generator-topic",
   "keywords": [
     "hexo",
     "generator",
-    "tag"
+    "topic"
   ],
-  "author": "Tommy Chen <tommy351@gmail.com> (http://zespia.tw)",
+  "author": "Pavel Kanyshev",
   "license": "MIT",
   "devDependencies": {
     "chai": "^3.5.0",
@@ -32,7 +32,7 @@
     "jscs-preset-hexo": "^1.0.1"
   },
   "dependencies": {
-    "hexo-pagination": "0.0.2",
+    "hexo-pagination": "^0.0.2",
     "object-assign": "^4.0.1"
   }
 }

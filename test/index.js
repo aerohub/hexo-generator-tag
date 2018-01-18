@@ -3,7 +3,7 @@
 var should = require('chai').should(); // eslint-disable-line
 var Hexo = require('hexo');
 
-describe('Tag generator', function() {
+describe('Topic generator', function() {
   var hexo = new Hexo(__dirname, {silent: true});
   var Post = hexo.model('Post');
   var generator = require('../lib/generator').bind(hexo);
@@ -11,7 +11,7 @@ describe('Tag generator', function() {
   var locals;
 
   // Default config
-  hexo.config.tag_generator = {
+  hexo.config.topic_generator = {
     per_page: 10
   };
 
@@ -24,12 +24,12 @@ describe('Tag generator', function() {
     ]).then(function(data) {
       posts = data;
 
-      return posts[0].setTags(['foo']).then(function() {
-        return posts[1].setTags(['bar']);
+      return posts[0].setTopics(['foo']).then(function() {
+        return posts[1].setTopics(['bar']);
       }).then(function() {
-        return posts[2].setTags(['foo']);
+        return posts[2].setTopics(['foo']);
       }).then(function() {
-        return posts[3].setTags(['foo']);
+        return posts[3].setTopics(['foo']);
       });
     }).then(function() {
       locals = hexo.locals.toObject();
@@ -38,73 +38,73 @@ describe('Tag generator', function() {
 
   describe('Disable index page', function() {
     it('pagination enabled', function() {
-      hexo.config.tag_generator.per_page = 2;
+      hexo.config.topic_generator.per_page = 2;
 
       var result = generator(locals);
 
       result.length.should.eql(3);
 
       for (var i = 0, len = result.length; i < len; i++) {
-        result[i].layout.should.eql(['tag', 'archive', 'index']);
+        result[i].layout.should.eql(['topic', 'archive', 'index']);
       }
 
-      result[0].path.should.eql('tags/foo/');
-      result[0].data.base.should.eql('tags/foo/');
+      result[0].path.should.eql('topics/foo/');
+      result[0].data.base.should.eql('topics/foo/');
       result[0].data.total.should.eql(2);
       result[0].data.current.should.eql(1);
-      result[0].data.current_url.should.eql('tags/foo/');
+      result[0].data.current_url.should.eql('topics/foo/');
       result[0].data.posts.eq(0)._id.should.eql(posts[3]._id);
       result[0].data.posts.eq(1)._id.should.eql(posts[0]._id);
       result[0].data.prev.should.eql(0);
       result[0].data.prev_link.should.eql('');
       result[0].data.next.should.eql(2);
-      result[0].data.next_link.should.eql('tags/foo/page/2/');
-      result[0].data.tag.should.eql('foo');
+      result[0].data.next_link.should.eql('topics/foo/page/2/');
+      result[0].data.topic.should.eql('foo');
 
-      result[1].path.should.eql('tags/foo/page/2/');
-      result[1].data.base.should.eql('tags/foo/');
+      result[1].path.should.eql('topics/foo/page/2/');
+      result[1].data.base.should.eql('topics/foo/');
       result[1].data.total.should.eql(2);
       result[1].data.current.should.eql(2);
-      result[1].data.current_url.should.eql('tags/foo/page/2/');
+      result[1].data.current_url.should.eql('topics/foo/page/2/');
       result[1].data.posts.eq(0)._id.should.eql(posts[2]._id);
       result[1].data.prev.should.eql(1);
-      result[1].data.prev_link.should.eql('tags/foo/');
+      result[1].data.prev_link.should.eql('topics/foo/');
       result[1].data.next.should.eql(0);
       result[1].data.next_link.should.eql('');
-      result[1].data.tag.should.eql('foo');
+      result[1].data.topic.should.eql('foo');
 
-      result[2].path.should.eql('tags/bar/');
-      result[2].data.base.should.eql('tags/bar/');
+      result[2].path.should.eql('topics/bar/');
+      result[2].data.base.should.eql('topics/bar/');
       result[2].data.total.should.eql(1);
       result[2].data.current.should.eql(1);
-      result[2].data.current_url.should.eql('tags/bar/');
+      result[2].data.current_url.should.eql('topics/bar/');
       result[2].data.posts.eq(0)._id.should.eql(posts[1]._id);
       result[2].data.prev.should.eql(0);
       result[2].data.prev_link.should.eql('');
       result[2].data.next.should.eql(0);
       result[2].data.next_link.should.eql('');
-      result[2].data.tag.should.eql('bar');
+      result[2].data.topic.should.eql('bar');
 
       // Restore config
-      hexo.config.tag_generator.per_page = 10;
+      hexo.config.topic_generator.per_page = 10;
     });
 
     it('pagination disabled', function() {
-      hexo.config.tag_generator.per_page = 0;
+      hexo.config.topic_generator.per_page = 0;
 
       var result = generator(locals);
 
       result.length.should.eql(2);
 
       for (var i = 0, len = result.length; i < len; i++) {
-        result[i].layout.should.eql(['tag', 'archive', 'index']);
+        result[i].layout.should.eql(['topic', 'archive', 'index']);
       }
 
-      result[0].path.should.eql('tags/foo/');
-      result[0].data.base.should.eql('tags/foo/');
+      result[0].path.should.eql('topics/foo/');
+      result[0].data.base.should.eql('topics/foo/');
       result[0].data.total.should.eql(1);
       result[0].data.current.should.eql(1);
-      result[0].data.current_url.should.eql('tags/foo/');
+      result[0].data.current_url.should.eql('topics/foo/');
       result[0].data.posts.eq(0)._id.should.eql(posts[3]._id);
       result[0].data.posts.eq(1)._id.should.eql(posts[0]._id);
       result[0].data.posts.eq(2)._id.should.eql(posts[2]._id);
@@ -112,130 +112,130 @@ describe('Tag generator', function() {
       result[0].data.prev_link.should.eql('');
       result[0].data.next.should.eql(0);
       result[0].data.next_link.should.eql('');
-      result[0].data.tag.should.eql('foo');
+      result[0].data.topic.should.eql('foo');
 
-      result[1].path.should.eql('tags/bar/');
-      result[1].data.base.should.eql('tags/bar/');
+      result[1].path.should.eql('topics/bar/');
+      result[1].data.base.should.eql('topics/bar/');
       result[1].data.total.should.eql(1);
       result[1].data.current.should.eql(1);
-      result[1].data.current_url.should.eql('tags/bar/');
+      result[1].data.current_url.should.eql('topics/bar/');
       result[1].data.posts.eq(0)._id.should.eql(posts[1]._id);
       result[1].data.prev.should.eql(0);
       result[1].data.prev_link.should.eql('');
       result[1].data.next.should.eql(0);
       result[1].data.next_link.should.eql('');
-      result[1].data.tag.should.eql('bar');
+      result[1].data.topic.should.eql('bar');
 
       // Restore config
-      hexo.config.tag_generator.per_page = 10;
+      hexo.config.topic_generator.per_page = 10;
     });
 
     it('custom pagination_dir', function() {
-      hexo.config.tag_generator.per_page = 2;
+      hexo.config.topic_generator.per_page = 2;
       hexo.config.pagination_dir = 'yo';
 
       var result = generator(locals);
 
       result.map(function(item) {
         return item.path;
-      }).should.eql(['tags/foo/', 'tags/foo/yo/2/', 'tags/bar/']);
+      }).should.eql(['topics/foo/', 'topics/foo/yo/2/', 'topics/bar/']);
 
       // Restore config
-      hexo.config.tag_generator.per_page = 10;
+      hexo.config.topic_generator.per_page = 10;
       hexo.config.pagination_dir = 'page';
     });
   });
 
   describe('Enable index page', function() {
     it('pagination enabled', function() {
-      hexo.config.tag_generator.per_page = 2;
-      hexo.config.tag_generator.enable_index_page = true;
+      hexo.config.topic_generator.per_page = 2;
+      hexo.config.topic_generator.enable_index_page = true;
 
       var result = generator(locals);
 
       result.length.should.eql(4);
 
       for (var i = 0, len = result.length - 1; i < len; i++) {
-        result[i].layout.should.eql(['tag', 'archive', 'index']);
+        result[i].layout.should.eql(['topic', 'archive', 'index']);
       }
 
-      result[3].layout.should.eql(['tag-index', 'tag', 'archive', 'index']);
+      result[3].layout.should.eql(['topic-index', 'topic', 'archive', 'index']);
 
-      result[0].path.should.eql('tags/foo/');
-      result[0].data.base.should.eql('tags/foo/');
+      result[0].path.should.eql('topics/foo/');
+      result[0].data.base.should.eql('topics/foo/');
       result[0].data.total.should.eql(2);
       result[0].data.current.should.eql(1);
-      result[0].data.current_url.should.eql('tags/foo/');
+      result[0].data.current_url.should.eql('topics/foo/');
       result[0].data.posts.eq(0)._id.should.eql(posts[3]._id);
       result[0].data.posts.eq(1)._id.should.eql(posts[0]._id);
       result[0].data.prev.should.eql(0);
       result[0].data.prev_link.should.eql('');
       result[0].data.next.should.eql(2);
-      result[0].data.next_link.should.eql('tags/foo/page/2/');
-      result[0].data.tag.should.eql('foo');
+      result[0].data.next_link.should.eql('topics/foo/page/2/');
+      result[0].data.topic.should.eql('foo');
 
-      result[1].path.should.eql('tags/foo/page/2/');
-      result[1].data.base.should.eql('tags/foo/');
+      result[1].path.should.eql('topics/foo/page/2/');
+      result[1].data.base.should.eql('topics/foo/');
       result[1].data.total.should.eql(2);
       result[1].data.current.should.eql(2);
-      result[1].data.current_url.should.eql('tags/foo/page/2/');
+      result[1].data.current_url.should.eql('topics/foo/page/2/');
       result[1].data.posts.eq(0)._id.should.eql(posts[2]._id);
       result[1].data.prev.should.eql(1);
-      result[1].data.prev_link.should.eql('tags/foo/');
+      result[1].data.prev_link.should.eql('topics/foo/');
       result[1].data.next.should.eql(0);
       result[1].data.next_link.should.eql('');
-      result[1].data.tag.should.eql('foo');
+      result[1].data.topic.should.eql('foo');
 
-      result[2].path.should.eql('tags/bar/');
-      result[2].data.base.should.eql('tags/bar/');
+      result[2].path.should.eql('topics/bar/');
+      result[2].data.base.should.eql('topics/bar/');
       result[2].data.total.should.eql(1);
       result[2].data.current.should.eql(1);
-      result[2].data.current_url.should.eql('tags/bar/');
+      result[2].data.current_url.should.eql('topics/bar/');
       result[2].data.posts.eq(0)._id.should.eql(posts[1]._id);
       result[2].data.prev.should.eql(0);
       result[2].data.prev_link.should.eql('');
       result[2].data.next.should.eql(0);
       result[2].data.next_link.should.eql('');
-      result[2].data.tag.should.eql('bar');
+      result[2].data.topic.should.eql('bar');
 
-      result[3].path.should.eql('tags/');
-      result[3].data.base.should.eql('tags/');
+      result[3].path.should.eql('topics/');
+      result[3].data.base.should.eql('topics/');
       result[3].data.total.should.eql(1);
       result[3].data.current.should.eql(1);
-      result[3].data.current_url.should.eql('tags/');
+      result[3].data.current_url.should.eql('topics/');
       // just all posts
       result[3].data.posts.should.eql(locals.posts);
       result[3].data.prev.should.eql(0);
       result[3].data.prev_link.should.eql('');
       result[3].data.next.should.eql(0);
       result[3].data.next_link.should.eql('');
-      // no tag, tags instead
-      (result[3].data.tag === undefined).should.be.true;
-      result[3].data.tags.should.eql(locals.tags);
+      // no topic, topics instead
+      (result[3].data.topic === undefined).should.be.true;
+      result[3].data.topics.should.eql(locals.topics);
 
       // Restore config
-      hexo.config.tag_generator.per_page = 10;
+      hexo.config.topic_generator.per_page = 10;
     });
 
     it('pagination disabled', function() {
-      hexo.config.tag_generator.per_page = 0;
-      hexo.config.tag_generator.enable_index_page = true;
+      hexo.config.topic_generator.per_page = 0;
+      hexo.config.topic_generator.enable_index_page = true;
 
       var result = generator(locals);
 
       result.length.should.eql(3);
 
       for (var i = 0, len = result.length - 1; i < len; i++) {
-        result[i].layout.should.eql(['tag', 'archive', 'index']);
+        result[i].layout.should.eql(['topic', 'archive', 'index']);
       }
 
-      result[2].layout.should.eql(['tag-index', 'tag', 'archive', 'index']);
+      result[2].layout.should.eql(['topic-index', 'topic', 'archive', 'index']);
 
-      result[0].path.should.eql('tags/foo/');
-      result[0].data.base.should.eql('tags/foo/');
+      result[0].path.should.eql('topics/foo/');
+      result[0].data.base.should.eql('topics/foo/');
       result[0].data.total.should.eql(1);
       result[0].data.current.should.eql(1);
-      result[0].data.current_url.should.eql('tags/foo/');
+      result[0].data.current_url.should.eql('topics/foo/');
       result[0].data.posts.eq(0)._id.should.eql(posts[3]._id);
       result[0].data.posts.eq(1)._id.should.eql(posts[0]._id);
       result[0].data.posts.eq(2)._id.should.eql(posts[2]._id);
@@ -243,50 +243,50 @@ describe('Tag generator', function() {
       result[0].data.prev_link.should.eql('');
       result[0].data.next.should.eql(0);
       result[0].data.next_link.should.eql('');
-      result[0].data.tag.should.eql('foo');
+      result[0].data.topic.should.eql('foo');
 
-      result[1].path.should.eql('tags/bar/');
-      result[1].data.base.should.eql('tags/bar/');
+      result[1].path.should.eql('topics/bar/');
+      result[1].data.base.should.eql('topics/bar/');
       result[1].data.total.should.eql(1);
       result[1].data.current.should.eql(1);
-      result[1].data.current_url.should.eql('tags/bar/');
+      result[1].data.current_url.should.eql('topics/bar/');
       result[1].data.posts.eq(0)._id.should.eql(posts[1]._id);
       result[1].data.prev.should.eql(0);
       result[1].data.prev_link.should.eql('');
       result[1].data.next.should.eql(0);
       result[1].data.next_link.should.eql('');
-      result[1].data.tag.should.eql('bar');
+      result[1].data.topic.should.eql('bar');
 
-      result[2].path.should.eql('tags/');
-      result[2].data.base.should.eql('tags/');
+      result[2].path.should.eql('topics/');
+      result[2].data.base.should.eql('topics/');
       result[2].data.total.should.eql(1);
       result[2].data.current.should.eql(1);
-      result[2].data.current_url.should.eql('tags/');
+      result[2].data.current_url.should.eql('topics/');
       result[2].data.posts.should.eql(locals.posts);
       result[2].data.prev.should.eql(0);
       result[2].data.prev_link.should.eql('');
       result[2].data.next.should.eql(0);
       result[2].data.next_link.should.eql('');
-      (result[2].data.tag === undefined).should.be.true;
-      result[2].data.tags.should.eql(locals.tags);
+      (result[2].data.topic === undefined).should.be.true;
+      result[2].data.topics.should.eql(locals.topics);
 
       // Restore config
-      hexo.config.tag_generator.per_page = 10;
+      hexo.config.topic_generator.per_page = 10;
     });
 
     it('custom pagination_dir', function() {
-      hexo.config.tag_generator.per_page = 2;
+      hexo.config.topic_generator.per_page = 2;
       hexo.config.pagination_dir = 'yo';
-      hexo.config.tag_generator.enable_index_page = true;
+      hexo.config.topic_generator.enable_index_page = true;
 
       var result = generator(locals);
 
       result.map(function(item) {
         return item.path;
-      }).should.eql(['tags/foo/', 'tags/foo/yo/2/', 'tags/bar/', 'tags/']);
+      }).should.eql(['topics/foo/', 'topics/foo/yo/2/', 'topics/bar/', 'topics/']);
 
       // Restore config
-      hexo.config.tag_generator.per_page = 10;
+      hexo.config.topic_generator.per_page = 10;
       hexo.config.pagination_dir = 'page';
     });
   });
